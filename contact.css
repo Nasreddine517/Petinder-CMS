@@ -1,0 +1,367 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(90deg, #faf3e0, #f9eac3);
+}
+
+.btn{
+    background-color: transparent;
+    border: none;
+    color: black;
+    gap: 5px;
+}
+
+
+.en-tete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 30px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(90deg, #faf3e0, #f9eac3);
+}
+
+
+
+.navbar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Cachée par défaut */
+    width: 300px;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s ease-in-out; /* Transition fluide */
+}
+
+
+.droite {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+.gauche img {
+    width: 170px;
+}
+
+.milieu {
+    display: flex;
+    gap: 30px;
+}
+
+.milieu a {
+    text-decoration: none;
+    color: #222;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+.milieu a:hover {
+    color: #ff4f8b; 
+}
+.btn1 {
+    background: linear-gradient(90deg, #ff4f8b, #ff9f43);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
+    transition: opacity 0.3s;
+    text-decoration: none;
+}
+
+.btn1:hover {
+    opacity: 0.9;
+}
+.milieu a.active {
+    color: #ff4f8b; 
+    font-weight: 600;
+    position: relative;
+}
+
+.milieu a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ff4f8b;
+    border-radius: 2px;
+}
+
+
+
+  .contact-section {
+    width: 100%;
+    background: linear-gradient(to bottom, #ffffff 55%, #f5e6cc 90%);;
+    padding: 80px 10%;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .contact-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 60px;
+  }
+
+  /* Partie texte */
+  .contact-text {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .contact-text h2 {
+    font-size: 48px;
+    color: #1f2b3a;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .contact-text p {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* Partie formulaire */
+  .contact-form {
+    flex: 1.2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .field-title {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  .field-box {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #a0a0a0;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fffefc;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.2s ease;
+  }
+
+  .field-box:focus {
+    border-color: #3b82f6;
+  }
+
+  .field-message {
+    height: 150px;
+    resize: vertical;
+  }
+
+  .half {
+    width: calc(50% - 10px);
+  }
+
+  .full {
+    width: 100%;
+  }
+
+  /* Bouton */
+.btn-submit {
+  display: inline-flex;              
+  justify-content: center;           
+  align-items: center;               
+  background: linear-gradient(90deg, #ff007a, #ff9b00);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s ease;
+  text-decoration: none;
+  margin-left: 20px;
+}
+
+.btn-submit:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+
+  .btn-submit:hover {
+    background-color: #2d3f52;
+  }
+
+
+  .field-title {
+    font-size: 15px;
+    text-align: left;
+  }
+
+  .field-box {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .field-message {
+    height: 120px;
+  }
+
+  /* BOUTON ENVOYER */
+  .btn-submit {
+    width: 100%;
+    font-size: 15px;
+    padding: 12px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #ff007a, #ff9b00);
+  }
+
+  .btn-submit:hover {
+    opacity: 0.9;
+  }
+
+
+
+
+@media screen and (max-width: 500px) {
+
+  /* HEADER */
+  .header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    gap: 15px;
+  }
+
+  .logo {
+    height: 90px;
+    width: 90px;
+  }
+
+  /* On cache tous les boutons et le bouton Se connecter */
+  .nav-btn,
+  .nav-btnC,
+  .login-container {
+    display: none;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .login-btn {
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 25px;
+  }
+
+  /* SECTION CONTACT */
+  .contact-section {
+    padding: 40px 20px;
+    background: linear-gradient(to bottom, #fffdf8 60%, #f8ead5 100%);
+  }
+
+  .contact-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 35px;
+  }
+
+  /* TEXTE */
+  .contact-text {
+    max-width: 400px;
+  }
+
+
+  .contact-text h2 {
+  font-size: 24px;
+  color: #1f2b3a;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 15px;
+  margin-right: 20px;
+  white-space: nowrap;
+}
+
+  .contact-text p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+    margin-right: 20px;
+  }
+
+  /* FORMULAIRE */
+  .contact-form {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: #fffefc;
+    padding: 25px 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin-right: 30px;
+  }
+
+  .field-title {
+    font-size: 14px;
+    color: #444;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .field-box {
+    font-size: 15px;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .field-message {
+    height: 100px;
+  }
+ 
+
+.contact-form .half {
+    width: 100%; /* même largeur que Email et Message */
+    margin: 0;
+}
+
+  .btn-submit {
+    background: linear-gradient(90deg, #ff007a, #ff9b00);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    width: 100%;
+    transition: transform 0.2s ease, opacity 0.3s;
+  }
+
+  .btn-submit:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+
