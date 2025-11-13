@@ -16,11 +16,13 @@
   --bg:#f8f8f8;
   --card:#ffffff;
   --muted:#666;
+  --beige:#faf3e0;
+  --beige-dark:#f9eac3;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter, Poppins, system-ui, Arial;background:var(--bg);height:100vh;display:flex;flex-direction:column}
 header{
-  background: linear-gradient(90deg, #faf3e0, #f9eac3);
+  background: linear-gradient(90deg, var(--beige), var(--beige-dark));
   color:#000;
   padding:14px 16px;
   font-weight:600;
@@ -39,18 +41,8 @@ header .logo{
   border-radius:8px;
   overflow:hidden;
 }
-header .logo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-header h1{
-  margin:0;
-  font-size:20px;
-  font-weight:700;
-  flex:1;
-  text-align:center;
-}
+header .logo img{width:100%;height:100%;object-fit:cover}
+header h1{margin:0;font-size:20px;font-weight:700;flex:1;text-align:center}
 
 .topbar{
   position:fixed;
@@ -63,9 +55,14 @@ header h1{
   align-items:center;
   background:transparent;
 }
-
 .filters{display:flex;gap:8px;padding:8px;background:transparent;align-items:center}
-.filters input,.filters select{padding:10px 12px;border-radius:20px;border:none;box-shadow:0 3px 8px rgba(0,0,0,0.12);min-width:160px}
+.filters input,.filters select{
+  padding:10px 12px;
+  border-radius:20px;
+  border:none;
+  box-shadow:0 3px 8px rgba(0,0,0,0.12);
+  min-width:160px;
+}
 
 #map{
   flex:1;
@@ -75,38 +72,117 @@ header h1{
 }
 
 /* Floating buttons */
-.floating{position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:10px; z-index:1400}
-.btn{background:linear-gradient(90deg, #ff4f8b, #ff9f43); color:#fff; border:none; padding:10px 12px; border-radius:10px; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,0.18); display:inline-flex; align-items:center; gap:8px; font-weight:600}
+.floating{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:1400;
+}
+.btn{
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:#fff;
+  border:none;
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-weight:600;
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.btn:hover{transform:scale(1.04);box-shadow:0 8px 22px rgba(0,0,0,0.25);}
 .round{width:56px;height:56px;border-radius:999px;padding:0;justify-content:center;font-size:26px}
 .small{padding:8px 10px;font-size:14px}
 
-/* Modal & profile card */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center}
-.card{background:var(--card);padding:16px;border-radius:12px;max-width:420px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,0.15)}
-.card img{width:100%;height:200px;object-fit:cover;border-radius:8px}
-.card h3{margin:8px 0 4px}
-.card p{margin:6px 0;color:var(--muted)}
+/* --- Modal & Form beige style --- */
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:2000;
+  align-items:center;
+  justify-content:center;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.card{
+  background:linear-gradient(180deg, var(--beige), var(--beige-dark));
+  padding:24px 28px;
+  border-radius:18px;
+  max-width:460px;
+  width:90%;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  animation:slideUp .35s ease;
+}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.card h3{text-align:center;margin:0 0 16px;font-size:22px;font-weight:700;color:#333}
+
+#animalForm input,
+#animalForm select,
+#animalForm textarea{
+  width:100%;
+  padding:14px 16px;
+  font-size:16px;
+  border-radius:12px;
+  border:none;
+  margin:8px 0;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  outline:none;
+  transition:box-shadow .2s ease;
+}
+#animalForm input:focus,
+#animalForm select:focus,
+#animalForm textarea:focus{
+  box-shadow:0 0 0 3px rgba(255,159,67,0.4);
+}
+#animalForm textarea{resize:none}
+#animalForm button{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+#cancelAdd{
+  background:#ddd;
+  color:#333;
+}
+#animalForm button[type=submit]{
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:white;
+}
 
 /* Emoji markers styling */
 .emoji-icon{font-size:30px;line-height:30px;transition:transform .18s ease}
-.emoji-icon.bounce{animation:bounce 420ms ease forwards}
 .emoji-icon:hover{transform:scale(1.12)}
-@keyframes bounce{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
 
-/* Hover for popup 'Voir profil' button */
-.view-btn{display:inline-block;padding:6px 10px;border-radius:8px;background:linear-gradient(90deg, #ff4f8b, #ff9f43);color:#fff;text-decoration:none;margin-top:8px;font-weight:700}
+.view-btn{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:8px;
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:#fff;
+  text-decoration:none;
+  margin-top:8px;
+  font-weight:700;
+}
 
 /* small helpers */
 .meta{font-size:13px;color:#444}
 .muted{color:var(--muted);font-size:13px}
 .distance{font-size:13px;color:#999;margin-top:4px}
 
-/* clusters tweak */
 .marker-cluster-small{background:rgba(255,107,107,0.9)}
 .marker-cluster-medium{background:rgba(255,90,90,0.95)}
 .marker-cluster-large{background:rgba(200,30,30,0.95)}
 
-/* Responsive */
 @media (max-width:720px){
   .filters input{min-width:120px}
   header h1{font-size:18px}
@@ -184,7 +260,7 @@ header h1{
       <input id="photo" placeholder="URL de la photo (optionnel)" />
       <textarea id="description" placeholder="Description" rows="3"></textarea>
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
-        <button type="button" id="cancelAdd" class="btn small" style="background:#ccc;color:#111">Annuler</button>
+        <button type="button" id="cancelAdd" class="btn small">Annuler</button>
         <button type="submit" class="btn small">Ajouter</button>
       </div>
     </form>
@@ -233,7 +309,7 @@ function distanceKm(lat1,lon1,lat2,lon2){
 }
 
 // Boutons position
-document.getElementById('locBtn').onclick = ()=>{
+document.getElementById('locBtn').onclick = ()=> {
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition((pos)=>{
       const lat = pos.coords.latitude, lon = pos.coords.longitude;
@@ -325,9 +401,23 @@ const addBtn = document.getElementById('addAnimalBtn');
 const modal = document.getElementById('animalFormModal');
 const form = document.getElementById('animalForm');
 const cancelAdd = document.getElementById('cancelAdd');
-addBtn.onclick = ()=> modal.style.display='flex';
-modal.onclick = e=>{if(e.target===modal) modal.style.display='none'};
-cancelAdd.onclick = ()=> modal.style.display='none';
+
+// Modal ouverture/fermeture animée
+addBtn.onclick = ()=> {
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+};
+modal.onclick = e=>{
+  if(e.target===modal){
+    modal.style.display='none';
+    document.body.style.overflow='auto';
+  }
+};
+cancelAdd.onclick = ()=>{
+  modal.style.display='none';
+  document.body.style.overflow='auto';
+};
+
 form.onsubmit = e=>{
   e.preventDefault();
   const ville = document.getElementById('villeForm').value;
@@ -351,6 +441,7 @@ form.onsubmit = e=>{
   markers.push(mk);
   markerGroup.addLayer(mk);
   modal.style.display='none';
+  document.body.style.overflow='auto';
   form.reset();
 };
 </script>
