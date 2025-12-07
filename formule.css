@@ -141,7 +141,7 @@ body {
   
  
   .formules-container {
-    display: flex;
+    display: flex;           
     justify-content: center;
     align-items: flex-start;
     flex-wrap: wrap;
