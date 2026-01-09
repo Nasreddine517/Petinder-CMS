@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tous les profils - Dates for Pets</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="profilesconnected.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="header">
+
+        <div class="en-tete">
+            <div class="gauche">
+                <img src="./assets/logo_reda-removebg-preview.png" alt="">
+            </div>
+
+            <nav class="milieu">
+                
+                <a href="accueilconnected.html">Accueil</a>
+                
+               
+                <a href="profilesconnected.html" class="active">Tous les Profiles</a>
+                
+               
+                <a href="ajouterprofile.html">Ajouter Profile</a>
+              
+                
+                
+                
+               
+                <a href="carte.html">Chercher Par Localisation</a>
+                
+                
+            </nav>
+
+            <div class="droite">
+                
+                <a href="seconnecter.html" class="btn20">en ligne</a>
+
+                
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- bandeau -->
+    <section class="sous-header-profils">
+        <div class="intro-profils">
+            <h1>Tous les profils vérifiés</h1>
+            <p>Retrouve les chiens et chats membres de la communauté — filtres par race, sexe et âge.</p>
+        </div>
+    </section>
+
+    <!-- filtres simples -->
+    <section class="filtres-profils">
+        <div class="filtre-row">
+            <button class="chip active" data-filter="all"><i class="fa-solid fa-paw"></i> Tous</button>
+            <button class="chip" data-filter="chien"><i class="fa-solid fa-dog"></i> Chiens</button>
+            <button class="chip" data-filter="chat"><i class="fa-solid fa-cat"></i> Chats</button>
+            <button class="chip" data-filter="male"><i class="fa-solid fa-mars"></i> Mâle</button>
+            <button class="chip" data-filter="femelle"><i class="fa-solid fa-venus"></i> Femelle</button>
+        </div>
+    </section>
+
+    <!-- grille profils -->
+    <section class="grille-profils">
+        <div class="profils-list">
+
+            <div class="carte-profil" data-type="chien" data-sex="male">
+                <img src="./assets/sousheader (1).webp" alt="Newton">
+                <div class="card-body">
+                    <h3>Newton</h3>
+                    <p class="race">Golden Labrador Retriever<br>(Mâle • 4 mois)</p>
+                    <p class="meta">Lyon, FR • Vacciné • Puce</p>
+                    <a href="newton.html" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+            <div class="carte-profil" data-type="chat" data-sex="femelle">
+                <img src="./assets/British shorthair.avif" alt="Moka">
+                <div class="card-body">
+                    <h3>Moka</h3>
+                    <p class="race">British Shorthair<br>(Femelle • 1 an)</p>
+                    <p class="meta">Paris, FR • Stérilisée</p>
+                    <a href="moka.html" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+            <div class="carte-profil" data-type="chien" data-sex="femelle">
+                <img src="./assets/Husky siberien.avif" alt="Luna">
+                <div class="card-body">
+                    <h3>Luna</h3>
+                    <p class="race">Husky Sibérien<br>(Femelle • 2 ans)</p>
+                    <p class="meta">Marseille, FR • Vaccins ok</p>
+                    <a href="luna.html" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+            <div class="carte-profil" data-type="chat" data-sex="male">
+                <img src="./assets/Maine coon.avif" alt="Simba">
+                <div class="card-body">
+                    <h3>Simba</h3>
+                    <p class="race">Maine Coon<br>(Mâle • 8 mois)</p>
+                    <p class="meta">Toulouse, FR • Puce</p>
+                    <a href="simba.html" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+            <div class="carte-profil" data-type="chien" data-sex="male">
+                <img src="./assets/Berger allemand.avif" alt="Rocky">
+                <div class="card-body">
+                    <h3>Rocky</h3>
+                    <p class="race">Berger Allemand<br>(Mâle • 3 ans)</p>
+                    <p class="meta">Lille, FR • Dressé</p>
+                    <a href="#" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+            <div class="carte-profil" data-type="chat" data-sex="femelle">
+                <img src="./assets/Siamois.avif" alt="Nala">
+                <div class="card-body">
+                    <h3>Nala</h3>
+                    <p class="race">Siamois<br>(Femelle • 5 ans)</p>
+                    <p class="meta">Bordeaux, FR • Famille d’accueil</p>
+                    <a href="#" class="voir-btn">Voir le profil</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+     <footer class="footer">
+      <div class="footer-container">
+        
+            <div class="footer-about">
+                <img src="assets/logo_reda-removebg-preview.png" alt="Dates For Pets" class="footer-logo">
+                <h3>A propos de Petinder</h3>
+                <p>
+                    Petinder est un site de rencontre pour animaux de compagnie permettant de mettre en relation des particuliers et des éleveurs
+                    en vue de faire se reproduire leur compagnon afin d’avoir une portée. Il a pour but de simplifier vos recherches et ainsi vous
+                    proposer des canidés et félidés de race pour des rencontres de qualité au plus près de chez vous.
+                </p>
+            </div>
+
+        
+            <div class="footer-links">
+                <div class="links-col">
+                    <a href="#">Profils</a>
+                    <a href="#">Formules</a>
+                    <a href="#">Qui sommes nous ?</a>
+                    <a href="#">Actu</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="links-col">
+                    <a href="#">CGV</a>
+                    <a href="#">Mentions légales</a>
+                    <a href="#">Utilisation des cookies</a>
+                </div>
+            </div>
+
+        
+            <div class="footer-social">
+                <h3>Suivez-nous</h3>
+                <div class="social-icons">
+                    <a href="#"><img src="assets/image1.png" alt="Instagram"></a>
+                    <a href="#"><img src="assets/facebook img 2.webp" alt="Facebook"></a>
+                </div>
+            </div>
+      </div>
+
+      <hr>
+      <p class="footer-bottom">© 2025 Petinder - Tous droits réservés</p>
+    </footer>
+
+
+
+
+
+    
+    <div id="customAlert" class="alert-box">
+        <p>⚠️ Connecte-toi ou crée un compte pour continuer.</p>
+        <button id="alertLoginBtn">Se connecter</button>
+    </div>
+
+
+    <script src="profilesconnected.js"></script>
+
+
+</body>
+</html>
