@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Petinder - Carte des animaux 🐾</title>
+
+<!-- Leaflet CSS + MarkerCluster CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+<style>
+:root{
+  --primary:#ff6b6b;
+  --bg:#f8f8f8;
+  --card:#ffffff;
+  --muted:#666;
+  --beige:#faf3e0;
+  --beige-dark:#f9eac3;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter, Poppins, system-ui, Arial;background:var(--bg);height:100vh;display:flex;flex-direction:column}
+header{
+  background: linear-gradient(90deg, var(--beige), var(--beige-dark));
+  color:#000;
+  padding:14px 16px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:1300;
+}
+header .logo{
+  width:60px;
+  height:60px;
+  border-radius:8px;
+  overflow:hidden;
+}
+header .logo img{width:100%;height:100%;object-fit:cover}
+header h1{margin:0;font-size:20px;font-weight:700;flex:1;text-align:center}
+
+.topbar{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  top:90px;
+  z-index:1200;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  background:transparent;
+}
+.filters{display:flex;gap:8px;padding:8px;background:transparent;align-items:center}
+.filters input,.filters select{
+  padding:10px 12px;
+  border-radius:20px;
+  border:none;
+  box-shadow:0 3px 8px rgba(0,0,0,0.12);
+  min-width:160px;
+}
+
+#map{
+  flex:1;
+  z-index:1;
+  min-height:0;
+  padding-top:160px; /* espace pour header/topbar */
+}
+
+/* Floating buttons */
+.floating{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:1400;
+}
+.btn{
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:#fff;
+  border:none;
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-weight:600;
+  transition:transform .15s ease, box-shadow .2s ease;
+}
+.btn:hover{transform:scale(1.04);box-shadow:0 8px 22px rgba(0,0,0,0.25);}
+.round{width:56px;height:56px;border-radius:999px;padding:0;justify-content:center;font-size:26px}
+.small{padding:8px 10px;font-size:14px}
+
+/* --- Modal & Form beige style --- */
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:2000;
+  align-items:center;
+  justify-content:center;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.card{
+  background:linear-gradient(180deg, var(--beige), var(--beige-dark));
+  padding:24px 28px;
+  border-radius:18px;
+  max-width:460px;
+  width:90%;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  animation:slideUp .35s ease;
+}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.card h3{text-align:center;margin:0 0 16px;font-size:22px;font-weight:700;color:#333}
+
+#animalForm input,
+#animalForm select,
+#animalForm textarea{
+  width:100%;
+  padding:14px 16px;
+  font-size:16px;
+  border-radius:12px;
+  border:none;
+  margin:8px 0;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  outline:none;
+  transition:box-shadow .2s ease;
+}
+#animalForm input:focus,
+#animalForm select:focus,
+#animalForm textarea:focus{
+  box-shadow:0 0 0 3px rgba(255,159,67,0.4);
+}
+#animalForm textarea{resize:none}
+#animalForm button{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+#cancelAdd{
+  background:#ddd;
+  color:#333;
+}
+#animalForm button[type=submit]{
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:white;
+}
+
+/* Emoji markers styling */
+.emoji-icon{font-size:30px;line-height:30px;transition:transform .18s ease}
+.emoji-icon:hover{transform:scale(1.12)}
+
+.view-btn{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:8px;
+  background:linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color:#fff;
+  text-decoration:none;
+  margin-top:8px;
+  font-weight:700;
+}
+
+/* small helpers */
+.meta{font-size:13px;color:#444}
+.muted{color:var(--muted);font-size:13px}
+.distance{font-size:13px;color:#999;margin-top:4px}
+
+.marker-cluster-small{background:rgba(255,107,107,0.9)}
+.marker-cluster-medium{background:rgba(255,90,90,0.95)}
+.marker-cluster-large{background:rgba(200,30,30,0.95)}
+
+@media (max-width:720px){
+  .filters input{min-width:120px}
+  header h1{font-size:18px}
+  .card img{height:160px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="logo_reda-removebg-preview.png" alt="Logo"/></div>
+  <h1>Petinder - Carte des animaux</h1>
+</header>
+
+<div class="topbar">
+  <div class="filters">
+    <input id="search" placeholder="🔍 Rechercher nom, race, espèce..." />
+    <select id="ville">
+      <option value="toutes">🌍 Toutes les villes</option>
+      <option>Casablanca</option>
+      <option>Rabat</option>
+      <option>Marrakech</option>
+      <option>Fès</option>
+      <option>Tanger</option>
+      <option>Agadir</option>
+    </select>
+    <select id="typeFilter">
+      <option value="tous">Tous types</option>
+      <option>Chien</option>
+      <option>Chat</option>
+    </select>
+    <select id="sexeFilter">
+      <option value="tous">Tous sexes</option>
+      <option>Mâle</option>
+      <option>Femelle</option>
+    </select>
+    <button id="resetBtn" class="btn small">Réinitialiser</button>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<div class="floating">
+  <button id="locBtn" class="btn small">Ma position</button>
+  <button id="centerBtn" class="btn small">Recentrer</button>
+  <button id="addAnimalBtn" class="btn round">+</button>
+</div>
+
+<!-- Add Animal Modal -->
+<div id="animalFormModal" class="modal-bg">
+  <div class="card">
+    <form id="animalForm">
+      <h3>Ajouter un animal 🐾</h3>
+      <input id="nom" placeholder="Nom" required />
+      <select id="espece" required>
+        <option value="">Sélectionner l'espèce</option>
+        <option>Chien</option>
+        <option>Chat</option>
+      </select>
+      <input id="race" placeholder="Race" />
+      <select id="sexe" required>
+        <option value="">Sélectionner le sexe</option>
+        <option>Mâle</option>
+        <option>Femelle</option>
+      </select>
+      <select id="villeForm" required>
+        <option value="">Sélectionner la ville</option>
+        <option>Casablanca</option>
+        <option>Rabat</option>
+        <option>Marrakech</option>
+        <option>Fès</option>
+        <option>Tanger</option>
+        <option>Agadir</option>
+      </select>
+      <input id="age" placeholder="Âge (ex: 2 ans)" />
+      <input id="photo" placeholder="URL de la photo (optionnel)" />
+      <textarea id="description" placeholder="Description" rows="3"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button type="button" id="cancelAdd" class="btn small">Annuler</button>
+        <button type="submit" class="btn small">Ajouter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="modal-bg">
+  <div class="card" id="profileCard"></div>
+</div>
+
+<!-- Leaflet + MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script>
+// Carte setup
+const mapCenter = [31.7917, -7.0926];
+const map = L.map('map').setView(mapCenter, 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution:'&copy; OpenStreetMap' }).addTo(map);
+
+const villesCoords = {
+  Casablanca:[33.5731,-7.5898],
+  Rabat:[34.0209,-6.8416],
+  Marrakech:[31.6295,-7.9811],
+  'Fès':[34.0331,-5.0003],
+  Tanger:[35.7595,-5.8339],
+  Agadir:[30.4278,-9.5981]
+};
+
+let tousLesAnimaux = [];
+let markers = [];
+const markerGroup = L.markerClusterGroup({chunkedLoading:true});
+map.addLayer(markerGroup);
+let userPos = null;
+const icons = { 'chien':'🐶', 'chat':'🐱' };
+
+// Distance en km
+function distanceKm(lat1,lon1,lat2,lon2){
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return (R*c).toFixed(1);
+}
+
+// Boutons position
+document.getElementById('locBtn').onclick = ()=> {
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition((pos)=>{
+      const lat = pos.coords.latitude, lon = pos.coords.longitude;
+      userPos = [lat, lon];
+      if(window.userMarker) map.removeLayer(window.userMarker);
+      const userIcon = L.icon({iconUrl:'https://cdn-icons-png.flaticon.com/512/149/149071.png', iconSize:[50,50], iconAnchor:[25,50]});
+      window.userMarker = L.marker([lat, lon], {icon:userIcon, zIndexOffset:1000}).addTo(map);
+      window.userMarker.bindPopup('<strong>Vous êtes ici</strong>');
+      map.setView([lat, lon], 12);
+    }, ()=>alert('Géolocalisation refusée ou indisponible'));
+  } else alert('Géolocalisation non supportée');
+};
+document.getElementById('centerBtn').onclick = ()=> map.setView(mapCenter, 6);
+
+// Charger animaux
+fetch('animaux.json')
+.then(r=>r.json())
+.then(data=>{
+  tousLesAnimaux = data;
+  afficherAnimaux(tousLesAnimaux);
+})
+.catch(e=>console.error(e));
+
+function buildMarker(a){
+  const emoji = icons[(a.espece||'').toLowerCase()] || '🐾';
+  const div = L.divIcon({
+    html:`<span class="emoji-icon">${emoji}</span>`,
+    className:'emoji-marker',
+    iconSize:[34,34],
+    popupAnchor:[0,-16]
+  });
+  const marker = L.marker([a.lat, a.lon], {icon:div});
+  marker.bindPopup(creerPopupHtml(a));
+  return marker;
+}
+
+function creerPopupHtml(a){
+  let distText = '';
+  if(userPos) distText = `<div class="distance">Distance: ${distanceKm(userPos[0], userPos[1], a.lat, a.lon)} km</div>`;
+  return `<div style="width:220px">
+    <img src="${a.photo}" alt="${a.nom}" style="width:100%;height:150px;object-fit:cover"/>
+    <h3>${a.nom}</h3>
+    <div class="meta">${a.espece} • ${a.race || ''} • ${a.age || ''}</div>
+    ${distText}
+    <p class="muted">${a.description || ''}</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <a class="view-btn" href="profiles.html?id=${a.id}">Voir profil</a>
+      <a class="view-btn" target="_blank" href="messages.html?id=${a.id}">Contacter le propriétaire</a>
+    </div>
+  </div>`;
+}
+
+function afficherAnimaux(animaux=tousLesAnimaux){
+  markerGroup.clearLayers();
+  markers = [];
+  animaux.forEach(a=>{
+    const mk = buildMarker(a);
+    markers.push(mk);
+    markerGroup.addLayer(mk);
+  });
+}
+
+// Filtres
+function filtrer(){
+  const q = (document.getElementById('search').value||'').toLowerCase();
+  const ville = document.getElementById('ville').value;
+  const type = document.getElementById('typeFilter').value;
+  const sexe = document.getElementById('sexeFilter').value;
+  const filtres = tousLesAnimaux.filter(a=>{
+    const txtMatch = !q || a.nom.toLowerCase().includes(q) || (a.race||'').toLowerCase().includes(q) || a.espece.toLowerCase().includes(q);
+    const villeMatch = ville==='toutes'||a.ville===ville;
+    const typeMatch = type==='tous'||a.espece===type;
+    const sexeMatch = sexe==='tous'||a.sexe===sexe;
+    return txtMatch && villeMatch && typeMatch && sexeMatch;
+  });
+  afficherAnimaux(filtres);
+}
+document.querySelectorAll('#search,#ville,#typeFilter,#sexeFilter').forEach(el=>el.addEventListener('input',filtrer));
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  document.getElementById('search').value='';
+  document.getElementById('ville').value='toutes';
+  document.getElementById('typeFilter').value='tous';
+  document.getElementById('sexeFilter').value='tous';
+  afficherAnimaux();
+});
+
+// Add Animal Modal
+const addBtn = document.getElementById('addAnimalBtn');
+const modal = document.getElementById('animalFormModal');
+const form = document.getElementById('animalForm');
+const cancelAdd = document.getElementById('cancelAdd');
+
+// Modal ouverture/fermeture animée
+addBtn.onclick = ()=> {
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+};
+modal.onclick = e=>{
+  if(e.target===modal){
+    modal.style.display='none';
+    document.body.style.overflow='auto';
+  }
+};
+cancelAdd.onclick = ()=>{
+  modal.style.display='none';
+  document.body.style.overflow='auto';
+};
+
+form.onsubmit = e=>{
+  e.preventDefault();
+  const ville = document.getElementById('villeForm').value;
+  const newId = (Math.max(0,...tousLesAnimaux.map(x=>x.id || 0))+1);
+  const animal = {
+    id:newId,
+    nom: document.getElementById('nom').value,
+    espece: document.getElementById('espece').value,
+    race: document.getElementById('race').value,
+    sexe: document.getElementById('sexe').value,
+    age: document.getElementById('age').value || '',
+    ville,
+    statut:'Disponible',
+    photo: document.getElementById('photo').value || 'https://via.placeholder.com/400',
+    description: document.getElementById('description').value,
+    lat: villesCoords[ville][0]+Math.random()*0.01,
+    lon: villesCoords[ville][1]+Math.random()*0.01
+  };
+  tousLesAnimaux.push(animal);
+  const mk = buildMarker(animal);
+  markers.push(mk);
+  markerGroup.addLayer(mk);
+  modal.style.display='none';
+  document.body.style.overflow='auto';
+  form.reset();
+};
+</script>
+</body>
+</html>

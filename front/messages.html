@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petinder 💬 - Messages</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Poppins, Arial, sans-serif;
+  background: #faf3e0;
+  color: #333;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(90deg, #faf3e0, #f9eac3);
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  justify-content: center;
+}
+header .logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 12px;
+}
+header .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* CHAT CONTAINER */
+.chat-container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  overflow: hidden;
+}
+
+/* MESSAGES ZONE */
+.messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.message {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.message.user {
+  align-self: flex-end;
+  background: linear-gradient(90deg, #ff4f8b, #ff9f43);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.message.other {
+  align-self: flex-start;
+  background: #f1e8d8;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+
+/* INPUT ZONE */
+.input-area {
+  display: flex;
+  border-top: 2px solid #f9eac3;
+  background: #fffaf0;
+}
+.input-area input {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: transparent;
+}
+.input-area button {
+  background: linear-gradient(90deg, #ff4f8b, #ff9f43);
+  border: none;
+  color: #fff;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 0 10px 10px 0;
+  transition: 0.3s;
+}
+.input-area button:hover {
+  opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+  <h1>💬 Messages</h1>
+</header>
+
+<div class="chat-container">
+  <div id="messages" class="messages"></div>
+
+  <div class="input-area">
+    <input id="inputMessage" type="text" placeholder="Écrire un message..." />
+    <button id="sendBtn">Envoyer</button>
+  </div>
+</div>
+
+<script>
+// récupérer id et infos animal depuis l'URL
+const params = new URLSearchParams(window.location.search);
+const animalId = params.get('id');
+let currentAnimal = { nom: "Animal", espece: "Inconnu" };
+
+// Charger JSON des animaux
+fetch('animaux.json')
+.then(r => r.json())
+.then(data => {
+  const found = data.find(a => a.id == animalId);
+  if(found) currentAnimal = found;
+  initChat();
+})
+.catch(e => { console.error(e); initChat(); });
+
+const input = document.getElementById("inputMessage");
+const btn = document.getElementById("sendBtn");
+const messages = document.getElementById("messages");
+
+function initChat() {
+  // message de bienvenue
+  const welcome = document.createElement("div");
+  welcome.className = "message other";
+  welcome.textContent = `Bonjour ! Vous parlez avec le propriétaire de ${currentAnimal.nom} (${currentAnimal.espece})`;
+  messages.appendChild(welcome);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+btn.addEventListener("click", sendMessage);
+input.addEventListener("keypress", e => {
+  if(e.key === "Enter") sendMessage();
+});
+
+async function sendMessage() {
+  const text = input.value.trim();
+  if(!text) return;
+
+  // Message utilisateur
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user";
+  userMsg.textContent = text;
+  messages.appendChild(userMsg);
+  input.value = "";
+  messages.scrollTop = messages.scrollHeight;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/ai-reply', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ text, nom: currentAnimal.nom, espece: currentAnimal.espece })
+    });
+    const data = await response.json();
+    const reply = document.createElement("div");
+    reply.className = "message other";
+    reply.textContent = data.reply;
+    messages.appendChild(reply);
+    messages.scrollTop = messages.scrollHeight;
+  } catch(err) {
+    const errMsg = document.createElement("div");
+    errMsg.className = "message other";
+    errMsg.textContent = "Désolé, impossible de répondre pour le moment.";
+    messages.appendChild(errMsg);
+    messages.scrollTop = messages.scrollHeight;
+    console.error(err);
+  }
+}
+</script>
+</body>
+</html>
