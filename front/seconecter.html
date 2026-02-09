@@ -153,7 +153,7 @@
     resetButton();
 
     // Vérifier si déjà connecté
-    const token = localStorage.getItem('auth_token');
+    const token = null;
     if (token) {
       // Vérifier si le token est valide
       fetch('http://localhost:5000/api/auth/check', {
